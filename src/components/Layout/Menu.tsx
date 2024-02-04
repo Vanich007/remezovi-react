@@ -55,8 +55,13 @@ const testMenuItems = [
         title: 'Contact',
     }
 ];
-export default function Menu() {
-    const [minimized, setMinimized] = useState(true)
+
+type MenuProps = {
+    setMinimized: React.Dispatch<React.SetStateAction<boolean>>
+    minimized: boolean
+}
+export default function Menu({minimized, setMinimized}: MenuProps) {
+
 return  <>
         <aside className={minimized ?  "minimized" : ''}>
             <ul className={minimized ?  "asideList minimized" : "asideList"}>

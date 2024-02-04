@@ -1,6 +1,7 @@
 import {NavLink, Outlet} from "react-router-dom";
 import styled from 'styled-components'
 import Menu from "./Menu";
+import {useState} from "react";
 
 const Container = styled.div`
   width: 100vw;
@@ -17,11 +18,20 @@ const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
   background-color: white;
   position: relative;
   padding: 20px;
+`
+const Subwrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transition: .4s;
+  width: ${(props)=> props.minimized ? '100%' : '80%'};
 `
 const Header = styled.header`
   width: 100%;
@@ -39,11 +49,12 @@ const Header = styled.header`
 
 
 export default function Layout() {
-
+    const [minimized, setMinimized] = useState(true)
 
     return (
         <Container>
             <Wrapper>
+                <Subwrapper minimized={minimized}>
 
                     <Header>
                         Ремезовы.рф
@@ -51,13 +62,13 @@ export default function Layout() {
 
 
                         <main>
-                            <Menu/>
+                            <Menu minimized={minimized} setMinimized={setMinimized}/>
                             <div className="content">
                             <Outlet/>
                             </div>
                         </main>
 
-
+                </Subwrapper>
             </Wrapper>
         </Container>
     );
