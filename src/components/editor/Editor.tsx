@@ -4,6 +4,7 @@ import { useGetQuotesQuery } from "./editorApiSlice"
 import styled from 'styled-components'
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
+// @ts-ignore
 import ImageUploader from "quill-image-uploader";
 import { Quill } from "react-quill";
 Quill.register("modules/imageUploader", ImageUploader);
@@ -33,7 +34,7 @@ const modules = {
                 formData.append("image", file);
 
                 fetch(
-                    "http://localhost:5000/upload/",
+                    `http://api.${window.location.host}/post-image/`,
                     {
                         method: "POST",
                         body: formData
@@ -82,6 +83,7 @@ width: 100%;
 export const Editor = () => {
     const [value, setValue] = useState('');
     return     <div className="App">
+        {/*@ts-ignore*/}
         <ReactQuill modules={modules} formats={formats} theme="snow" value={value} onChange={setValue} />{value}
     </div>
   // const [numberOfQuotes, setNumberOfQuotes] = useState(10)
