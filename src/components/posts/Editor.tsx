@@ -1,12 +1,20 @@
-import { useState } from "react"
-import styles from "../../features/quotes/Quotes.module.css"
-import { useGetQuotesQuery } from "./editorApiSlice"
+import React, {useMemo, useState} from "react"
+import type {CreatePostDto, Post} from "./postsApiSlice";
+import { useAddPostQuery} from "./postsApiSlice"
 import styled from 'styled-components'
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 // @ts-ignore
 import ImageUploader from "quill-image-uploader";
 import { Quill } from "react-quill";
+
+import {API_URL} from "../../api/api";
+import {Button, OutlinedInput } from "@mui/material";
+import {useAppSelector} from "../../app/hooks";
+import {selectUser, selectUserId} from "../../features/user/userSlice";
+import LoginVKButton from "../Buttons/LoginVKButton";
+
+
 Quill.register("modules/imageUploader", ImageUploader);
 
 const modules = {
@@ -34,7 +42,7 @@ const modules = {
                 formData.append("image", file);
 
                 fetch(
-                    `http://api.${window.location.host}/post-image/`,
+                    `${API_URL}/post-image/`,
                     {
                         method: "POST",
                         body: formData
@@ -76,16 +84,48 @@ const formats = [
 
 const options = [5, 10, 20, 30]
 
-const wrapper = styled.div`
+const Wrapper = styled.div`
 width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 30px;
 `
 
 export const Editor = () => {
-    const [value, setValue] = useState('');
-    return     <div className="App">
-        {/*@ts-ignore*/}
-        <ReactQuill modules={modules} formats={formats} theme="snow" value={value} onChange={setValue} />{value}
-    </div>
+    const [text, setText] = useState('');
+    const [title, setTitle] = useState('');
+    const [query, setQuery] = useState(undefined as CreatePostDto | undefined);
+    // @ts-ignore
+    const {data, error, isFetching}=useAddPostQuery(query);
+    const saveHandler = (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        const dto:CreatePostDto = {text, title, author:0}
+        setQuery(dto)
+    }
+
+    const userId = useAppSelector(selectUserId)
+
+    // const options: Post = useMemo(() => {
+    //     if (!data || !text) return [];
+    //     return data.map(({text, globalId}) => {
+    //         return {
+    //             key: globalId,
+    //             text: <SelectAddressItemValue name={text} />,
+    //         };
+    //     });
+    // }, [data, text]);
+
+
+    return     <Wrapper>
+        {userId ? <>
+                <OutlinedInput placeholder={'Название'}  value={title} onChange={(event)=>setTitle(event.target.value)}/>
+                {/*@ts-ignore*/}
+        <ReactQuill modules={modules} formats={formats} theme="snow" value={text} onChange={setText} />
+        <Button variant="text" onClick={saveHandler}>Сохранить</Button></> : <LoginVKButton text={"Для работы с редактором текстов, залогиньтесь в VK"}/>
+    }
+    </Wrapper>
+
   // const [numberOfQuotes, setNumberOfQuotes] = useState(10)
   // // Using a query hook automatically fetches data and returns query values
   // const { data, isError, isLoading, isSuccess } =
@@ -113,13 +153,13 @@ export const Editor = () => {
   //       <h3>Select the Quantity of Quotes to Fetch:</h3>
   //       <select
   //         className={styles.select}
-  //         value={numberOfQuotes}
+  //         text={numberOfQuotes}
   //         onChange={e => {
-  //           setNumberOfQuotes(Number(e.target.value))
+  //           setNumberOfQuotes(Number(e.target.text))
   //         }}
   //       >
   //         {options.map(option => (
-  //           <option key={option} value={option}>
+  //           <option key={option} text={option}>
   //             {option}
   //           </option>
   //         ))}

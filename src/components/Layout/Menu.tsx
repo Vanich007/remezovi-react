@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import {Link, NavLink, Outlet} from "react-router-dom";
 import styled from 'styled-components'
 import styles from "./menu.css"
 import {useState} from "react";
@@ -44,16 +44,16 @@ const Nav = styled.nav`
 const testMenuItems = [
     {
         href: '/',
-        title: 'Introduction',
+        title: 'На главную',
     },
     {
-        href: 'about',
-        title: 'About',
+        href: '/editor',
+        title: 'Редактор',
     },
-    {
-        href: 'contact',
-        title: 'Contact',
-    }
+    // {
+    //     href: 'contact',
+    //     title: 'Contact',
+    // }
 ];
 
 type MenuProps = {
@@ -65,10 +65,10 @@ export default function Menu({minimized, setMinimized}: MenuProps) {
 return  <>
         <aside className={minimized ?  "minimized" : ''}>
             <ul className={minimized ?  "asideList minimized" : "asideList"}>
-                <li><a href="" className="asideAnchor">Link</a></li>
-                <li><a href="" className="asideAnchor">Link</a></li>
-                <li><a href="" className="asideAnchor">Link</a></li>
-                <li><a href="" className="asideAnchor">Link</a></li>
+                {testMenuItems.map(m=><li key={m.title}>
+                    <Link to={m.href} className="asideAnchor">{m.title}</Link>
+                </li>)}
+
             </ul>
         </aside>
         <div className='burger-container'>

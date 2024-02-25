@@ -212,3 +212,7 @@ input[type="checkbox"]:checked ~ label .middle {
   font-size: 2em;
   z-index: 2;
 }
+
+a:visited {
+  text-decoration: none!important;
+}
