@@ -1,14 +1,19 @@
 import styled from 'styled-components'
-import React from "react";
+import React, {useEffect, useState} from "react";
 import * as VKID from '@vkid/sdk';
 import {useLocation} from 'react-router-dom';
+import type {CreateUserDto} from "../../features/user/userSlice";
 import {selectUser, setUser} from "../../features/user/userSlice";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {Button} from "@mui/material";
+import {API_URL} from "../../api/api";
+import {postData} from "../../features/user/userAPI";
+import {usePatchPostQuery} from "../posts/postsApiSlice";
+import {useAddUserQuery} from "../../features/user/usersApiSlice";
 
 VKID.Config.set({
     app: 51859285,
-    redirectUrl: 'https://xn--b1afaixoj8g.xn--p1ai'
+    redirectUrl: 'https://xn--b1afaixoj8g.xn--p1ai/editor'
 });
 
 const VkContainer = styled.div`
@@ -38,23 +43,40 @@ const VKName = styled.span`
 `
 
 
-export default function LoginVKButton({text='Войти VK'}) {
-
-
+export default function LoginVKButton({text = 'Войти VK', backUrl = 'https://xn--b1afaixoj8g.xn--p1ai/'}) {
+    const [dtoUser, setDtoUser] = useState(undefined as CreateUserDto | undefined)
+    // @ts-ignore
+    // const {error: patchError, isFetching: patchIsFetching}=useAddUserQuery(dtoUser);
     let location = useLocation();
 
     const dispatch = useAppDispatch()
 
 
     const user = useAppSelector(selectUser)
-    console.log('user from redux', user)
     React.useEffect(() => {
         // @ts-ignore
         const params = new URLSearchParams(location.search);
         const payload = params.get('payload')
         if (!payload) return;
-        dispatch(setUser(JSON.parse(payload)));
+        const dto = JSON.parse(payload)
+        dispatch(setUser(dto));
+
+        const dtoUser: CreateUserDto = {
+            firstName: dto.user.first_name,
+            lastName: dto.user.last_name,
+            id: dto.user.id,
+            avatar: dto.user.avatar
+        }
+        setDtoUser(dtoUser)
+        postData(`${API_URL}/users/add`, dtoUser)
     }, [location.search]);
+
+    useEffect(() => {
+        VKID.Config.set({
+            app: 51859285,
+            redirectUrl: backUrl
+        });
+    }, [backUrl]);
 
 
     const loginVK = () => {
@@ -63,7 +85,7 @@ export default function LoginVKButton({text='Войти VK'}) {
     }
     return <>
         {user ? <VkContainer><VKAvatar src={user.avatar}></VKAvatar>
-        <VKName>{user.first_name}</VKName>
-    </VkContainer> : <><Button variant="text" onClick={loginVK}>{text}</Button></>}
+            <VKName>{user.first_name}</VKName>
+        </VkContainer> : <><Button variant="contained" onClick={loginVK}>{text}</Button></>}
     </>
 }

@@ -7,7 +7,7 @@ import LoginVKButton from "../Buttons/LoginVKButton";
 
 const Container = styled.div`
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #0799d3;
   display: flex;
   flex-direction: column;
@@ -17,6 +17,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   width: 90%;
   max-width: 1200px;
+  min-height: 100vh;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -48,6 +49,7 @@ const Header = styled.header`
   padding-right: 200px;
   color: #0799d3;
   position: relative;
+  margin-bottom: 80px;
 `
 
 

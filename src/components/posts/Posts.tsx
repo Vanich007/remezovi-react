@@ -1,11 +1,10 @@
 import {useEffect, useMemo, useState} from "react"
-import type {CreatePostDto, GetPostDto} from "./postsApiSlice";
+
 import {useGetPostsQuery} from "./postsApiSlice"
 import {PostItem} from "./PostItem"
 import styled from 'styled-components'
 
-import {Button, Input} from "@mui/material";
-
+import ReactPaginate from 'react-paginate';
 
 
 
@@ -18,32 +17,63 @@ const Wrapper = styled.div`
 `
 
 export const Posts = () => {
-    const [count, setCount] = useState(10);
-    const [page, setPage] = useState(1);
-
+    // const [count, setCount] = useState(10);
+    // const [page, setPage] = useState(1);
+    const [itemOffset, setItemOffset] = useState(0);
+    const itemsPerPage = 100;
     // @ts-ignore
-    const {data, error, isFetching}=useGetPostsQuery({count,page});
-    // useEffect(() => {
-    //     setQuery({ count: 10})
-    // }, []);
-    // const options: Post = useMemo(() => {
-    //     if (!data || !text) return [];
-    //     return data.map(({text, globalId}) => {
-    //         return {
-    //             key: globalId,
-    //             text: <SelectAddressItemValue name={text} />,
-    //         };
-    //     });
-    // }, [data, text]);
+    const {data, error, isFetching}=useGetPostsQuery({count: itemsPerPage,skip: itemOffset});
+    const endOffset = itemOffset + itemsPerPage;
+    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
 
-    useEffect(() => {
-        console.log('data', data)
-    }, [data]);
-
-
+    const pageCount = data && data.count ? Math.ceil(data.count / itemsPerPage) : 1;
+    const handlePageClick = (event:{selected: number, }) => {
+        const newOffset = data && data.count ? (event.selected * itemsPerPage) % data.count : 0;
+        // setPage(newOffset)
+        console.log(
+            `User requested page number ${event.selected}, which is offset ${newOffset}`
+        );
+        setItemOffset(newOffset);
+    };
+const data1 = [{
+    "id": 132,
+    "title": "Пост о жизни в деревне",
+    "text": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.</p>",
+    "author": 7198731,
+    "user": {
+        "id": 7198731,
+        "avatar": "https://sun9-48.userapi.com/s/v1/ig2/I08o5gwL6nCYKNJbWSDmbTZsKAuiGBxnct9F3lt29kpXFSxfUF6jEZ9RZp-I6WqHiaQQVF0pu2QlzZd_hM_XnqeY.jpg?size=200x200&quality=96&crop=675,222,756,756&ava=1",
+        "firstName": "Иван",
+        "lastName": "Р.",
+        "isActive": true
+    }
+}, {
+    "id": 132,
+    "title": "Пост о жизни в деревне",
+    "text": "<p>Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.</p>",
+    "author": 7198731,
+    "user": {
+        "id": 7198731,
+        "avatar": "https://sun9-48.userapi.com/s/v1/ig2/I08o5gwL6nCYKNJbWSDmbTZsKAuiGBxnct9F3lt29kpXFSxfUF6jEZ9RZp-I6WqHiaQQVF0pu2QlzZd_hM_XnqeY.jpg?size=200x200&quality=96&crop=675,222,756,756&ava=1",
+        "firstName": "Иван",
+        "lastName": "Р.",
+        "isActive": true
+    }
+}]
     return     <Wrapper>
-
-        {data&& data.posts && data.posts.map(d => <PostItem key={d.id} id={d.id} title={d.title} text={d.text} author={d.author}/>)}
+        <div className={'pagination'}>
+            {data && data.count && data.count>itemsPerPage && <ReactPaginate
+            breakLabel="..."
+            nextLabel=">>"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="<<"
+            renderOnZeroPageCount={null}
+        />}
+        </div>
+        {data&& data.posts && data.posts.map(d => <PostItem key={d.id} id={d.id} title={d.title} author ={d.author} text={d.text} user={d.user}/>)}
+        {data1 && data1.map(d => <PostItem key={d.id} id={d.id} title={d.title} author ={d.author} text={d.text} user={d.user}/>)}
 
     </Wrapper>
 

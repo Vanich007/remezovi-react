@@ -1,6 +1,6 @@
-import React, {useMemo, useState} from "react"
-import type {CreatePostDto, Post} from "./postsApiSlice";
-import { useAddPostQuery} from "./postsApiSlice"
+import {useEffect, useState} from "react"
+import type {CreatePostDto, PatchPostDto, Post} from "./postsApiSlice";
+import {useAddPostQuery, usePatchPostQuery} from "./postsApiSlice"
 import styled from 'styled-components'
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
@@ -92,19 +92,38 @@ width: 100%;
   gap: 30px;
 `
 
-export const Editor = () => {
+export const Editor = ({post}: {post: Post|undefined}) => {
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
+    const [id, setId] = useState(0);
     const [query, setQuery] = useState(undefined as CreatePostDto | undefined);
+    const [queryPatch, setQueryPatch] = useState(undefined as PatchPostDto | undefined);
     // @ts-ignore
     const {data, error, isFetching}=useAddPostQuery(query);
+    // @ts-ignore
+    const {data: patchData, error: patchError, isFetching: patchIsFetching}=usePatchPostQuery(queryPatch);
+    const userId = useAppSelector(selectUserId)
+
     const saveHandler = (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        const dto:CreatePostDto = {text, title, author:0}
-        setQuery(dto)
+        if(!id){
+            const dto:CreatePostDto = {text, title, author: userId}
+            setQuery(dto)
+        } else {
+            const dto: PatchPostDto = {text, title, author:userId, id}
+            setQueryPatch(dto)
+        }
+
     }
 
-    const userId = useAppSelector(selectUserId)
+    useEffect(()=>{
+        if (!post) return;
+        if(post.title) setTitle(post.title);
+        if(post.text) setText(post.text);
+        if(post.id) setId(post.id);
+    },[post])
+
+
 
     // const options: Post = useMemo(() => {
     //     if (!data || !text) return [];
@@ -122,7 +141,7 @@ export const Editor = () => {
                 <OutlinedInput placeholder={'Название'}  value={title} onChange={(event)=>setTitle(event.target.value)}/>
                 {/*@ts-ignore*/}
         <ReactQuill modules={modules} formats={formats} theme="snow" value={text} onChange={setText} />
-        <Button variant="text" onClick={saveHandler}>Сохранить</Button></> : <LoginVKButton text={"Для работы с редактором текстов, залогиньтесь в VK"}/>
+        <Button variant="text" onClick={saveHandler}>Сохранить</Button></> : <LoginVKButton text={"Для редактирваниям поста залогиньтесь в VK"} backUrl={post&&post.id ? `https://xn--b1afaixoj8g.xn--p1ai/editor/${post.id}`:'https://xn--b1afaixoj8g.xn--p1ai/editor'}/>
     }
     </Wrapper>
 

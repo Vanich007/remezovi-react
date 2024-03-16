@@ -7,7 +7,8 @@ export const fetchCount = (amount = 1) => {
   )
 }
 
-async function postData(url = "", data = {}) {
+export async function postData(url = "", data = {}) {
+  console.log('postData', data)
   // Default options are marked with *
   const response = await fetch(url, {
     method: "POST", // *GET, POST, PUT, DELETE, etc.

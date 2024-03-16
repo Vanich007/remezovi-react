@@ -5,6 +5,7 @@ import {Editor} from "./components/posts/Editor"
 import { Routes, Route, BrowserRouter } from "react-router-dom"
 import Layout from "./components/Layout/Layout";
 import {Posts} from "./components/posts/Posts";
+import EditorContainer from "./components/posts/EditorContainer";
 const App = () => {
 
     return ( <div>
@@ -12,7 +13,8 @@ const App = () => {
             <Routes>
                 <Route element={<Layout />} >
                     <Route path="/" element={<Posts/>} />
-                    <Route path="/editor" element={ <Editor/>} />
+                    <Route path="/editor/:id" element={ <EditorContainer/>} />
+                    <Route path="/editor" element={ <Editor post={undefined}/>} />
                     {/*<Route path="contact" element={<Contact />} />*/}
                 </Route>
             </Routes>

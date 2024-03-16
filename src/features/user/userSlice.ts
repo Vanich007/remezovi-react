@@ -1,6 +1,9 @@
 import type {PayloadAction} from "@reduxjs/toolkit"
 import {createAppSlice} from "../../app/createAppSlice"
 import type {AppThunk} from "../../app/store"
+import {fetchCount} from "../counter/counterAPI";
+import {API_URL} from "../../api/api";
+
 
 export interface VkPayload {
     auth: number;
@@ -12,12 +15,18 @@ export interface VkPayload {
     loadExternalUsers?: boolean;
     user: VkUserPayload
 }
+export interface CreateUserDto {
+    avatar: string;
+    firstName: string;
+    lastName: string;
+    id: number;
+}
 
 export interface VkUserPayload {
     avatar: string
     avatar_base: string | null
     first_name: string
-  id: 7198731
+  id: number
   last_name: string
   phone: string
 }
@@ -49,24 +58,34 @@ export const users = createAppSlice({
     initialState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: create => ({
-        increment: create.reducer(state => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            // state.value += 1
-        }),
-        decrement: create.reducer(state => {
-            // state.value -= 1
-        }),
-        // Use the `PayloadAction` type to declare the contents of `action.payload`
+
         setUser: create.reducer(
             (state, action: PayloadAction<VkPayload>) => {
-                console.log('setUser action', action)
                 state.user = action.payload.user
             },
         ),
+        // addUser: create.asyncThunk(
+        //     async (dto: createUserDto) => {
+        //         console.log('addUser', dto)
+        //         const response = await postData(`${API_URL}/users/add`, dto)
+        //
+        //         return response.data
+        //     },
+        //     {
+        //         pending: state => {
+        //             // state.status = "loading"
+        //         },
+        //         fulfilled: (state, action) => {
+        //             // state.status = "idle"
+        //             // state.value += action.payload
+        //         },
+        //         rejected: state => {
+        //             // state.status = "failed"
+        //         },
+        //     },
+        // ),
     }),
+
     // You can define your selectors here. These selectors receive the slice
     // state as their first argument.
     selectors: {
@@ -77,6 +96,6 @@ export const users = createAppSlice({
 
 })
 
-export const {decrement, increment, setUser} =
+export const { setUser} =
     users.actions
 export const {selectAuth, selectUser, selectUserId} = users.selectors
