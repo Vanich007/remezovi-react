@@ -8,8 +8,6 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {Button} from "@mui/material";
 import {API_URL} from "../../api/api";
 import {postData} from "../../features/user/userAPI";
-import {usePatchPostQuery} from "../posts/postsApiSlice";
-import {useAddUserQuery} from "../../features/user/usersApiSlice";
 
 VKID.Config.set({
     app: 51859285,

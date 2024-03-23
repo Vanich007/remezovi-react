@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react"
 import type {CreatePostDto, PatchPostDto, Post} from "./postsApiSlice";
-import {useAddPostQuery, usePatchPostQuery} from "./postsApiSlice"
+import {useAddPostMutation, usePatchPostMutation} from "./postsApiSlice"
 import styled from 'styled-components'
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
@@ -9,10 +9,11 @@ import ImageUploader from "quill-image-uploader";
 import { Quill } from "react-quill";
 
 import {API_URL} from "../../api/api";
-import {Button, OutlinedInput } from "@mui/material";
+import {Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select} from "@mui/material";
 import {useAppSelector} from "../../app/hooks";
 import {selectUser, selectUserId} from "../../features/user/userSlice";
 import LoginVKButton from "../Buttons/LoginVKButton";
+import {selectCategiries} from "./categoriesSlice";
 
 
 Quill.register("modules/imageUploader", ImageUploader);
@@ -95,23 +96,24 @@ width: 100%;
 export const Editor = ({post}: {post: Post|undefined}) => {
     const [text, setText] = useState('');
     const [title, setTitle] = useState('');
+    const [category, setCategory] = useState(0);
     const [id, setId] = useState(0);
-    const [query, setQuery] = useState(undefined as CreatePostDto | undefined);
-    const [queryPatch, setQueryPatch] = useState(undefined as PatchPostDto | undefined);
-    // @ts-ignore
-    const {data, error, isFetching}=useAddPostQuery(query);
-    // @ts-ignore
-    const {data: patchData, error: patchError, isFetching: patchIsFetching}=usePatchPostQuery(queryPatch);
-    const userId = useAppSelector(selectUserId)
 
+    // @ts-ignore
+    const [addPost, { isError: addError }]=useAddPostMutation();
+    // @ts-ignore
+    const [patchPost, { isError: patchError }]=usePatchPostMutation();
+    const userId = useAppSelector(selectUserId)
+    const categories = useAppSelector(selectCategiries)
     const saveHandler = (e:  React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         if(!id){
-            const dto:CreatePostDto = {text, title, author: userId}
-            setQuery(dto)
+            const dto:CreatePostDto = {text, title, author: userId, category}
+            addPost(dto)
         } else {
-            const dto: PatchPostDto = {text, title, author:userId, id}
-            setQueryPatch(dto)
+            console.log('patch')
+            const dto: PatchPostDto = {text, title, author:userId, id, category}
+            patchPost(dto)
         }
 
     }
@@ -121,25 +123,26 @@ export const Editor = ({post}: {post: Post|undefined}) => {
         if(post.title) setTitle(post.title);
         if(post.text) setText(post.text);
         if(post.id) setId(post.id);
+        if(post.category) setCategory(post.category.id);
     },[post])
-
-
-
-    // const options: Post = useMemo(() => {
-    //     if (!data || !text) return [];
-    //     return data.map(({text, globalId}) => {
-    //         return {
-    //             key: globalId,
-    //             text: <SelectAddressItemValue name={text} />,
-    //         };
-    //     });
-    // }, [data, text]);
-
 
     return     <Wrapper>
         {userId ? <>
                 <OutlinedInput placeholder={'Название'}  value={title} onChange={(event)=>setTitle(event.target.value)}/>
-                {/*@ts-ignore*/}
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Категория</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={category}
+                    label="Age"
+                    onChange={(event)=>setCategory(+event.target.value)}
+                >
+                    {categories.map(c=><MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)}
+
+                </Select>
+            </FormControl>
+            {/*@ts-ignore*/}
         <ReactQuill modules={modules} formats={formats} theme="snow" value={text} onChange={setText} />
         <Button variant="text" onClick={saveHandler}>Сохранить</Button></> : <LoginVKButton text={"Для редактирваниям поста залогиньтесь в VK"} backUrl={post&&post.id ? `https://xn--b1afaixoj8g.xn--p1ai/editor/${post.id}`:'https://xn--b1afaixoj8g.xn--p1ai/editor'}/>
     }

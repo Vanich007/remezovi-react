@@ -1,9 +1,11 @@
 import {Link, Outlet} from "react-router-dom";
 import styled from 'styled-components'
 import Menu from "./Menu";
-import React, { useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import LoginVKButton from "../Buttons/LoginVKButton";
+import {fetchCategories} from "../posts/categoriesSlice";
+import {useAppDispatch} from "../../app/hooks";
 
 const Container = styled.div`
   width: 100vw;
@@ -62,6 +64,11 @@ const HeaderLink = styled.span`
 export default function Layout() {
     const [minimized, setMinimized] = useState<boolean>(true)
 
+    const dispatch = useAppDispatch()
+
+useEffect(()=>{
+    dispatch(fetchCategories(1))
+},[])
     return (
         <Container>
             <Wrapper>

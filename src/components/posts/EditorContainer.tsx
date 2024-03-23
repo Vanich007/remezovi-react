@@ -1,7 +1,7 @@
 import {useLocation, useParams} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectUser, setUser} from "../../features/user/userSlice";
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import {Editor} from "./Editor";
 import type {Post} from "./postsApiSlice";
 import { useGetPostQuery} from "./postsApiSlice";
@@ -13,7 +13,7 @@ const [post, setPost] = useState<Post>()
     let location = useLocation();
     let {id} = useParams();
 
-    const {data, error, isFetching}=useGetPostQuery({id});
+    const {data, error, isFetching}=useGetPostQuery({id: `${postId}`});
 
     const dispatch = useAppDispatch()
 

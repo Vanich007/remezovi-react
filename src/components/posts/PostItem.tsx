@@ -11,6 +11,7 @@ import {
         DeleteSweep, ExpandCircleDown,
 } from "@mui/icons-material";
 import AlertDialog from "../Dialogs/AlertDialog";
+import {selectCategiries} from "./categoriesSlice";
 
 const MAX_HEIGHT = 260
 
@@ -37,6 +38,10 @@ const Title = styled.h2`
 `;
 const Text = styled.p`
   font-size: 16px;
+  //letter-spacing: 20px;
+`;
+const Category = styled.p`
+  font-size: 12px;
   //letter-spacing: 20px;
 `;
 
@@ -77,7 +82,7 @@ height: 0;
   box-shadow: 0 0 10px 1px #0077FF;
 `
 
-export const PostItem = ({text, title, author, user, id}: Post) => {
+export const PostItem = ({text, title, author, user, id, category}: Post) => {
     const [idToDelete, setIdToDelete] = useState<number>(0)
     const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
     const [showMore, setShowMore] = useState<boolean>(false)
@@ -94,7 +99,6 @@ export const PostItem = ({text, title, author, user, id}: Post) => {
 
     const cancelCb = useCallback(() => {
         setShowDeleteDialog(false);
-        setShowDeleteDialog(false)
     }, [id])
     const agreeCb = useCallback(() => {
         setIdToDelete(id);
@@ -109,7 +113,7 @@ export const PostItem = ({text, title, author, user, id}: Post) => {
                     {user &&
                         <Tooltip title={`${user.firstName} ${user.lastName}`}><Avatar
                             src={user.avatar}></Avatar></Tooltip>}
-                    <Link to={`/post/${id}`}><Title>{title}</Title></Link>
+                    <Link to={`/post/${id}`}><Title>{title}</Title></Link> / {category && <Category>{category.name}</Category>}
                     {userId && userId === author &&
                         <Link to={`/editor/${id}`}><Tooltip
                             title={`Это Ваш пост, Вы можете его редактировать.`}><IconButton color={'info'}>

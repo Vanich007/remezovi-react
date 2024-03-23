@@ -35,31 +35,33 @@ export const Posts = () => {
         );
         setItemOffset(newOffset);
     };
-const data1 = [{
-    "id": 132,
-    "title": "Пост о жизни в деревне",
-    "text": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.</p>",
-    "author": 7198731,
-    "user": {
-        "id": 7198731,
-        "avatar": "https://sun9-48.userapi.com/s/v1/ig2/I08o5gwL6nCYKNJbWSDmbTZsKAuiGBxnct9F3lt29kpXFSxfUF6jEZ9RZp-I6WqHiaQQVF0pu2QlzZd_hM_XnqeY.jpg?size=200x200&quality=96&crop=675,222,756,756&ava=1",
-        "firstName": "Иван",
-        "lastName": "Р.",
-        "isActive": true
-    }
-}, {
-    "id": 132,
-    "title": "Пост о жизни в деревне",
-    "text": "<p>Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.</p>",
-    "author": 7198731,
-    "user": {
-        "id": 7198731,
-        "avatar": "https://sun9-48.userapi.com/s/v1/ig2/I08o5gwL6nCYKNJbWSDmbTZsKAuiGBxnct9F3lt29kpXFSxfUF6jEZ9RZp-I6WqHiaQQVF0pu2QlzZd_hM_XnqeY.jpg?size=200x200&quality=96&crop=675,222,756,756&ava=1",
-        "firstName": "Иван",
-        "lastName": "Р.",
-        "isActive": true
-    }
-}]
+// const data1 = [{
+//     "id": 132,
+//     "title": "Пост о жизни в деревне",
+//     "text": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.</p>",
+//     "author": 7198731,
+//     category: 1,
+//     "user": {
+//         "id": 7198731,
+//         "avatar": "https://sun9-48.userapi.com/s/v1/ig2/I08o5gwL6nCYKNJbWSDmbTZsKAuiGBxnct9F3lt29kpXFSxfUF6jEZ9RZp-I6WqHiaQQVF0pu2QlzZd_hM_XnqeY.jpg?size=200x200&quality=96&crop=675,222,756,756&ava=1",
+//         "firstName": "Иван",
+//         "lastName": "Р.",
+//         "isActive": true
+//     }
+// }, {
+//     "id": 132,
+//     "title": "Пост о жизни в деревне",
+//     "text": "<p>Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.Lorem500  ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis consectetur distinctio dolorem est ipsum officiis pariatur quaerat qui reiciendis, voluptatem.</p>",
+//     "author": 7198731,
+//     category: 1,
+//     "user": {
+//         "id": 7198731,
+//         "avatar": "https://sun9-48.userapi.com/s/v1/ig2/I08o5gwL6nCYKNJbWSDmbTZsKAuiGBxnct9F3lt29kpXFSxfUF6jEZ9RZp-I6WqHiaQQVF0pu2QlzZd_hM_XnqeY.jpg?size=200x200&quality=96&crop=675,222,756,756&ava=1",
+//         "firstName": "Иван",
+//         "lastName": "Р.",
+//         "isActive": true
+//     }
+// }]
     return     <Wrapper>
         <div className={'pagination'}>
             {data && data.count && data.count>itemsPerPage && <ReactPaginate
@@ -72,8 +74,8 @@ const data1 = [{
             renderOnZeroPageCount={null}
         />}
         </div>
-        {data&& data.posts && data.posts.map(d => <PostItem key={d.id} id={d.id} title={d.title} author ={d.author} text={d.text} user={d.user}/>)}
-        {data1 && data1.map(d => <PostItem key={d.id} id={d.id} title={d.title} author ={d.author} text={d.text} user={d.user}/>)}
+        {data&& data.posts && data.posts.map(d => <PostItem key={d.id} category={d.category} id={d.id} title={d.title} author ={d.author} text={d.text} user={d.user}/>)}
+        {/*{data1 && data1.map(d => <PostItem category={d.category} key={d.id} id={d.id} title={d.title} author ={d.author} text={d.text} user={d.user}/>)}*/}
 
     </Wrapper>
 
